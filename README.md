@@ -14,6 +14,12 @@ Terra Sentinel is a polished, offline-capable TypeScript app that turns a city-l
 
 The goal is not a dashboard that only looks serious. The interface is driven by deterministic domain logic in `src/domain/engine.ts`, covered by tests, and packaged with architecture, security, and demo documentation.
 
+## Screenshots
+
+![Terra Sentinel desktop command center](qa/terra-desktop.png)
+
+![Terra Sentinel mobile command center](qa/terra-mobile.png)
+
 ## Why It Matters
 
 The project is grounded in real disaster-risk framing:
@@ -44,6 +50,16 @@ npm run security:audit
 ```
 
 The `npm run check` script runs the same quality gates together.
+
+For deployment visual QA, build the site, start the Pages-aware preview server, then run the Playwright smoke check:
+
+```bash
+npm run build:pages
+npm run preview:pages
+npm run qa:visual
+```
+
+The visual QA script validates the dashboard heading, district map, priority brief, district count, touch-target sizing, and nonblank desktop/mobile screenshots under the `/terra-sentinel/` GitHub Pages base path.
 
 ## What To Demo
 

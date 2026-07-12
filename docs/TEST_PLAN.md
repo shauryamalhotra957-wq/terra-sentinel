@@ -9,6 +9,14 @@ npm run build
 npm run security:audit
 ```
 
+For deployment smoke testing:
+
+```bash
+npm run build:pages
+npm run preview:pages
+npm run qa:visual
+```
+
 ## Covered Behavior
 
 - Risk rises when flood stress increases.
@@ -29,6 +37,7 @@ npm run security:audit
 - Export packet JSON, district CSV, and allocation CSV.
 - Copy public warning messages.
 - Run a production preview from `dist`.
+- Run the Pages visual QA against `/terra-sentinel/` on desktop and mobile viewports.
 
 ## Latest Local Verification
 
