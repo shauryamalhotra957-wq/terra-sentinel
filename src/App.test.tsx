@@ -9,6 +9,7 @@ describe('App', () => {
 
     expect(screen.getByRole('heading', { name: /Humanitarian Risk Command Center/i })).toBeInTheDocument()
     expect(screen.getByText(/City risk/i)).toBeInTheDocument()
+    expect(screen.getByText(/Priority Brief/i)).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: /Heat Health/i }))
 
@@ -22,6 +23,9 @@ describe('App', () => {
 
     expect(screen.getByRole('slider', { name: /Rainfall/i })).toHaveValue('222')
     expect(screen.getByRole('button', { name: /Export packet/i })).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: /Expert/i }))
+
     expect(screen.getByRole('button', { name: /Download district CSV/i })).toBeInTheDocument()
   })
 

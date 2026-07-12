@@ -4,6 +4,7 @@ Humanitarian Risk Command Center for disaster lifelines, resource allocation, an
 
 Terra Sentinel is a polished, offline-capable TypeScript app that turns a city-level disaster scenario into:
 
+- a simplified Priority Brief for quick decision-making
 - district risk scores and explainable drivers
 - FEMA-style lifeline stabilization status
 - resource allocation recommendations with ETAs and coverage estimates
@@ -47,9 +48,9 @@ The `npm run check` script runs the same quality gates together.
 ## What To Demo
 
 1. Select a scenario preset such as `Cyclone Landfall` or `Heat Health`.
-2. Move the rainfall, river, wind, heat, communications, hospital, and traffic controls.
-3. Click districts on the operational map and watch risk, lifelines, warnings, and drivers change.
-4. Review resource moves: units, ETA, people covered, and rationale.
+2. Use the default `Simple` view for the Priority Brief, map, and next moves.
+3. Move the rainfall, river, heat, and traffic controls.
+4. Switch to `Expert` for the full lifeline, forecast, incident, and export surface.
 5. Export the briefing JSON and CSV files.
 
 ## Project Structure
@@ -75,4 +76,3 @@ docs/
 ## Safety Boundary
 
 This is a decision-intelligence prototype with synthetic data. It is not certified for real emergency dispatch, medical triage, evacuation orders, or public warning issuance without expert validation, local data integration, governance review, and field testing.
-

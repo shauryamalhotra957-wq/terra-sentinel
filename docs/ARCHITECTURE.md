@@ -65,6 +65,8 @@ Warnings are generated for SMS, WhatsApp, public address, and radio. Messages ar
 
 The React UI is a dense command center:
 
+- default Simple mode with scenario controls, priority brief, map, and next moves
+- Expert mode for analysts who need the full operational surface
 - status metric strip
 - scenario lab sliders
 - interactive SVG risk map
@@ -100,4 +102,3 @@ flowchart LR
 - Introduce calibrated models for flood depth, hospital load, and evacuation travel time.
 - Add role-based approvals for public warning publication.
 - Integrate audit logging and signed briefing packets.
-

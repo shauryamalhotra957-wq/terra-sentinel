@@ -10,11 +10,11 @@ The point is not to predict the future perfectly. The point is to make response 
 
 1. Start on `Monsoon Surge`.
 2. Point to the metric strip: city risk, exposed population, resource coverage, and equity guardrail.
-3. Click `South Flats` on the map and show the district score, shelter demand, and primary driver.
-4. Move rainfall and river level upward. The map, lifelines, forecast, and allocations update immediately.
-5. Switch to `Heat Health`. Show how the risk shifts from flood-heavy districts toward dense medical-vulnerability zones.
-6. Open the resource list. Explain units, ETA, people covered, and the rationale line.
-7. Show the warning panel. Messages are prepared for SMS, WhatsApp, public address, and radio with checksums.
+3. Use the `Priority Brief` panel to show the top district, first action, and why the model chose it.
+4. Move rainfall, river level, heat, or traffic. The brief, map, and next moves update immediately.
+5. Click a district on the map and show the selected risk, shelter need, and driver.
+6. Switch to `Heat Health`. Show how the priority shifts toward medical-vulnerability zones.
+7. Switch to `Expert` and show lifelines, forecast, incidents, explainability, and CSV exports.
 8. Export the briefing packet and explain how an emergency desk could attach it to an incident log.
 
 ## Professor Questions To Expect
@@ -30,4 +30,3 @@ The app is explicit that it is not certified for real emergency operations. A pr
 
 **What is technically impressive?**  
 It has a real domain engine, finite resource optimization, explainability, accessibility checks, exportable packets, offline support, security notes, and automated tests.
-

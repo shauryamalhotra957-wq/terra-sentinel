@@ -44,6 +44,8 @@ import type {
   WarningMessage,
 } from './domain/types'
 
+type ExperienceMode = 'simple' | 'expert'
+
 const formatNumber = (value: number) => new Intl.NumberFormat('en-US').format(Math.round(value))
 
 const severityCopy: Record<Severity, string> = {
@@ -137,6 +139,13 @@ const controlMeta: Array<{
   },
 ]
 
+const essentialControlKeys = new Set<keyof ScenarioControls>([
+  'rainfallMm',
+  'riverLevelM',
+  'heatIndexC',
+  'trafficBlockagePercent',
+])
+
 function MetricTile({
   icon,
   label,
@@ -204,6 +213,37 @@ function SeverityPill({ severity }: { severity: Severity }) {
   return <span className={`severity-pill severity-${severity}`}>{severityCopy[severity]}</span>
 }
 
+function ModeToggle({
+  mode,
+  onModeChange,
+}: {
+  mode: ExperienceMode
+  onModeChange: (mode: ExperienceMode) => void
+}) {
+  return (
+    <div className="mode-toggle" role="group" aria-label="View density">
+      <button
+        type="button"
+        aria-pressed={mode === 'simple'}
+        className={mode === 'simple' ? 'active' : ''}
+        onClick={() => onModeChange('simple')}
+      >
+        <BadgeCheck size={15} />
+        Simple
+      </button>
+      <button
+        type="button"
+        aria-pressed={mode === 'expert'}
+        className={mode === 'expert' ? 'active' : ''}
+        onClick={() => onModeChange('expert')}
+      >
+        <SlidersHorizontal size={15} />
+        Expert
+      </button>
+    </div>
+  )
+}
+
 function RiskMap({
   city,
   selectedId,
@@ -250,6 +290,7 @@ function RiskMap({
               }}
               className={selected ? 'district selected' : 'district'}
             >
+              <title>{getLabel(assessment)}</title>
               <polygon
                 points={assessment.district.polygon}
                 fill={riskColor(assessment.score)}
@@ -294,12 +335,14 @@ function LifelineGrid({ lifelines }: { lifelines: LifelineStatus[] }) {
 
 function AllocationTable({
   recommendations,
+  limit = 7,
 }: {
   recommendations: AllocationRecommendation[]
+  limit?: number
 }) {
   return (
     <div className="allocation-list">
-      {recommendations.slice(0, 7).map((recommendation) => (
+      {recommendations.slice(0, limit).map((recommendation) => (
         <article key={recommendation.id} className="allocation-row">
           <div>
             <strong>{recommendation.resourceLabel}</strong>
@@ -457,17 +500,20 @@ function App() {
   const [controls, setControls] = useState<ScenarioControls>(defaultScenario.controls)
   const [presetId, setPresetId] = useState(defaultScenario.id)
   const [selectedDistrictId, setSelectedDistrictId] = useState('south-flats')
+  const [mode, setMode] = useState<ExperienceMode>('simple')
   const [copied, setCopied] = useState(false)
 
   const city = useMemo(() => assessCity(controls), [controls])
   const selectedDistrict =
     city.districts.find((assessment) => assessment.district.id === selectedDistrictId) ?? city.districts[0]
+  const topDistrict = city.districts[0]
   const recommendations = useMemo(() => allocateResources(city), [city])
   const forecast = useMemo(() => simulateForecast(controls), [controls])
   const warningMessages = useMemo(
     () => generateWarnings(selectedDistrict, controls),
     [selectedDistrict, controls],
   )
+  const priorityWarnings = useMemo(() => generateWarnings(topDistrict, controls), [topDistrict, controls])
   const coverage = useMemo(() => summarizeCoverage(recommendations), [recommendations])
   const equity = useMemo(() => equityScore(city, recommendations), [city, recommendations])
   const packet = useMemo(
@@ -475,7 +521,9 @@ function App() {
     [city, controls, recommendations, selectedDistrict, warningMessages],
   )
 
-  const topDistrict = city.districts[0]
+  const primaryMove = recommendations[0]
+  const primaryWarning = priorityWarnings[0]
+  const essentialControls = controlMeta.filter((meta) => essentialControlKeys.has(meta.key))
   const applyPreset = (id: string) => {
     const preset = scenarioPresets.find((item) => item.id === id) ?? defaultScenario
     setPresetId(preset.id)
@@ -504,6 +552,7 @@ function App() {
           </div>
         </div>
         <div className="header-actions">
+          <ModeToggle mode={mode} onModeChange={setMode} />
           <button type="button" className="ghost-button" onClick={() => applyPreset(defaultScenario.id)}>
             <RefreshCw size={16} />
             Reset
@@ -547,7 +596,119 @@ function App() {
         />
       </section>
 
-      <section className="workspace-grid">
+      {mode === 'simple' ? (
+        <section className="simple-experience">
+          <section className="panel simple-controls-panel">
+            <div className="panel-heading">
+              <div>
+                <p>Scenario</p>
+                <h2>Set the situation</h2>
+              </div>
+              <SlidersHorizontal size={20} />
+            </div>
+            <div className="preset-strip">
+              {scenarioPresets.map((preset) => (
+                <button
+                  type="button"
+                  key={preset.id}
+                  className={presetId === preset.id ? 'preset-button active' : 'preset-button'}
+                  onClick={() => applyPreset(preset.id)}
+                  title={preset.summary}
+                >
+                  {preset.name}
+                </button>
+              ))}
+            </div>
+            <div className="essential-controls">
+              {essentialControls.map((meta) => (
+                <ScenarioSlider key={meta.key} meta={meta} controls={controls} setControls={setControls} />
+              ))}
+            </div>
+          </section>
+
+          <section className="simple-grid">
+            <section className="panel priority-panel">
+              <div className="panel-heading">
+                <div>
+                  <p>Priority Brief</p>
+                  <h2>{topDistrict.district.name}</h2>
+                </div>
+                <SeverityPill severity={topDistrict.severity} />
+              </div>
+              <div className="priority-body">
+                <div className="priority-score">
+                  <strong>{topDistrict.score}</strong>
+                  <span>risk score</span>
+                </div>
+                <article className="priority-action">
+                  <span>Do first</span>
+                  <strong>
+                    {primaryMove
+                      ? `${primaryMove.units} ${primaryMove.resourceLabel} to ${primaryMove.districtName}`
+                      : 'Keep monitoring'}
+                  </strong>
+                  <p>{primaryMove?.rationale ?? 'No immediate resource move is required for this scenario.'}</p>
+                </article>
+                <div className="priority-chips">
+                  {topDistrict.primaryDrivers.map((driver) => (
+                    <span key={driver}>{driver}</span>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  className="ghost-button"
+                  onClick={() => setSelectedDistrictId(topDistrict.district.id)}
+                >
+                  <MapPin size={16} />
+                  Focus map
+                </button>
+              </div>
+            </section>
+
+            <section className="panel map-panel simple-map-panel">
+              <div className="panel-heading">
+                <div>
+                  <p>Map</p>
+                  <h2>{selectedDistrict.district.name}</h2>
+                </div>
+                <SeverityPill severity={selectedDistrict.severity} />
+              </div>
+              <RiskMap city={city} selectedId={selectedDistrict.district.id} onSelect={setSelectedDistrictId} />
+              <div className="selected-summary">
+                <article>
+                  <span>Risk</span>
+                  <strong>{selectedDistrict.score}</strong>
+                </article>
+                <article>
+                  <span>Shelter need</span>
+                  <strong>{formatNumber(selectedDistrict.expectedShelterDemand)}</strong>
+                </article>
+                <article>
+                  <span>Driver</span>
+                  <strong>{selectedDistrict.primaryDrivers[0]}</strong>
+                </article>
+              </div>
+            </section>
+
+            <section className="panel next-panel">
+              <div className="panel-heading">
+                <div>
+                  <p>Next Moves</p>
+                  <h2>Act now</h2>
+                </div>
+                <Siren size={20} />
+              </div>
+              <AllocationTable recommendations={recommendations} limit={3} />
+              <article className="simple-warning">
+                <span>Public warning</span>
+                <p>{primaryWarning.body}</p>
+                <code>{primaryWarning.checksum}</code>
+              </article>
+            </section>
+          </section>
+        </section>
+      ) : (
+        <section className="workspace-grid">
         <aside className="panel scenario-panel">
           <div className="panel-heading">
             <div>
@@ -702,6 +863,7 @@ function App() {
           <CityLifelineChart lifelines={city.lifelineAverages} />
         </section>
       </section>
+      )}
     </main>
   )
 }
