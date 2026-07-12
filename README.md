@@ -14,6 +14,15 @@ Terra Sentinel is a polished, offline-capable TypeScript app that turns a city-l
 
 The goal is not a dashboard that only looks serious. The interface is driven by deterministic domain logic in `src/domain/engine.ts`, covered by tests, and packaged with architecture, security, and demo documentation.
 
+## Project Snapshot
+
+| Area | Detail |
+| --- | --- |
+| Experience | Humanitarian risk command center for crisis briefings |
+| Core system | District scoring, lifeline status, warnings, resource allocation, JSON/CSV exports |
+| Design signal | Priority-first dashboard with verified desktop/mobile screenshots |
+| Quality signal | CI, coverage, security audit, GitHub Pages deployment, visual QA |
+
 ## Screenshots
 
 ![Terra Sentinel desktop command center](qa/terra-desktop.png)
