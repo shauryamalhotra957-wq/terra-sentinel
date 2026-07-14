@@ -541,6 +541,12 @@ function App() {
 
   return (
     <main className="app-shell">
+      <div className="terra-entry" aria-hidden="true">
+        <div>
+          <span>Terra Sentinel</span>
+          <strong>Lifeline command opening</strong>
+        </div>
+      </div>
       <header className="topbar">
         <div className="brand-lockup">
           <span className="brand-mark">
@@ -567,6 +573,25 @@ function App() {
           </button>
         </div>
       </header>
+
+      <section className="command-strip" aria-label="Current response context">
+        <article>
+          <span>Top district</span>
+          <strong>{topDistrict.district.name}</strong>
+        </article>
+        <article>
+          <span>Severity</span>
+          <strong>{severityCopy[topDistrict.severity]}</strong>
+        </article>
+        <article>
+          <span>First move</span>
+          <strong>{primaryMove.resourceLabel}</strong>
+        </article>
+        <article>
+          <span>Warnings</span>
+          <strong>{priorityWarnings.length} ready</strong>
+        </article>
+      </section>
 
       <section className="metric-strip" aria-label="Current city risk summary">
         <MetricTile
@@ -864,6 +889,17 @@ function App() {
         </section>
       </section>
       )}
+      <footer className="terra-footer">
+        <div>
+          <strong>Terra Sentinel</strong>
+          <span>Humanitarian response surface for lifelines, warnings, allocations, and explainable risk.</span>
+        </div>
+        <nav aria-label="Footer status">
+          <span>{mode} mode</span>
+          <span>{formatNumber(coverage.peopleCovered)} covered</span>
+          <span>Equity {equity}%</span>
+        </nav>
+      </footer>
     </main>
   )
 }
