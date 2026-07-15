@@ -101,3 +101,7 @@ docs/
 ## Safety Boundary
 
 This is a decision-intelligence prototype with synthetic data. It is not certified for real emergency dispatch, medical triage, evacuation orders, or public warning issuance without expert validation, local data integration, governance review, and field testing.
+
+## Experience Design
+
+The field-ready interface follows the [Terra Sentinel design system](design-system/terra-sentinel/MASTER.md), with touch-first controls, explicit selected states, readable incident hierarchy, responsive layouts, and reduced-motion support.

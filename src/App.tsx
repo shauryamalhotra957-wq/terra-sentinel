@@ -21,6 +21,7 @@ import {
   Zap,
 } from 'lucide-react'
 import './App.css'
+import './experience.css'
 import { defaultScenario, incidents, lifelineDefinitions, scenarioPresets } from './domain/data'
 import {
   allocateResources,
