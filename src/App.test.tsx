@@ -29,6 +29,24 @@ describe('App', () => {
     expect(screen.getByRole('button', { name: /Download district CSV/i })).toBeInTheDocument()
   })
 
+  it('distinguishes a tuned scenario from a named baseline', () => {
+    render(<App />)
+
+    const monsoonPreset = screen.getByRole('button', { name: /Monsoon Surge/i })
+    expect(monsoonPreset).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByText(/Monsoon Surge baseline loaded/i)).toBeInTheDocument()
+
+    fireEvent.change(screen.getByRole('slider', { name: /Rainfall/i }), { target: { value: '206' } })
+
+    expect(monsoonPreset).toHaveAttribute('aria-pressed', 'false')
+    expect(screen.getByText(/Custom scenario/i)).toBeInTheDocument()
+
+    fireEvent.change(screen.getByRole('slider', { name: /Rainfall/i }), { target: { value: '178' } })
+
+    expect(monsoonPreset).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByText(/Monsoon Surge baseline loaded/i)).toBeInTheDocument()
+  })
+
   it('has no obvious accessibility violations in the loaded dashboard', async () => {
     const { container } = render(<App />)
     const results = await axe.run(container, {

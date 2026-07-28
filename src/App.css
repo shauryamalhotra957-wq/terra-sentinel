@@ -247,6 +247,46 @@ button {
   flex: 0 0 auto;
 }
 
+.scenario-provenance {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 16px 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.scenario-provenance span {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #5bb59b;
+  box-shadow: 0 0 0 4px rgba(91, 181, 155, 0.12);
+}
+
+.scenario-provenance.is-custom {
+  width: fit-content;
+  border: 1px solid #b7791f;
+  border-radius: 999px;
+  padding: 4px 8px;
+  color: #5b3600;
+  background: #fff3cf;
+}
+
+.scenario-provenance.is-custom span {
+  background: #d9a94f;
+  box-shadow: 0 0 0 4px rgba(217, 169, 79, 0.14), 0 0 18px rgba(217, 169, 79, 0.36);
+  animation: provenancePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes provenancePulse {
+  50% {
+    transform: scale(1.25);
+  }
+}
+
 .essential-controls {
   display: grid;
   grid-template-columns: repeat(4, minmax(170px, 1fr));

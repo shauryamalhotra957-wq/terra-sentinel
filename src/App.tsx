@@ -245,6 +245,28 @@ function ModeToggle({
   )
 }
 
+function ScenarioProvenance({ presetId }: { presetId: string | null }) {
+  const preset = scenarioPresets.find((item) => item.id === presetId)
+  return (
+    <p
+      className={preset ? 'scenario-provenance' : 'scenario-provenance is-custom'}
+      role="status"
+      aria-live="polite"
+    >
+      <span aria-hidden="true" />
+      {preset ? `${preset.name} baseline loaded` : 'Custom scenario · controls diverge from a baseline'}
+    </p>
+  )
+}
+
+function matchingPresetId(controls: ScenarioControls): string | null {
+  return (
+    scenarioPresets.find((preset) =>
+      controlMeta.every((meta) => preset.controls[meta.key] === controls[meta.key]),
+    )?.id ?? null
+  )
+}
+
 function RiskMap({
   city,
   selectedId,
@@ -499,7 +521,7 @@ function CityLifelineChart({ lifelines }: { lifelines: LifelineStatus[] }) {
 
 function App() {
   const [controls, setControls] = useState<ScenarioControls>(defaultScenario.controls)
-  const [presetId, setPresetId] = useState(defaultScenario.id)
+  const [presetId, setPresetId] = useState<string | null>(defaultScenario.id)
   const [selectedDistrictId, setSelectedDistrictId] = useState('south-flats')
   const [mode, setMode] = useState<ExperienceMode>('simple')
   const [copied, setCopied] = useState(false)
@@ -529,6 +551,10 @@ function App() {
     const preset = scenarioPresets.find((item) => item.id === id) ?? defaultScenario
     setPresetId(preset.id)
     setControls(preset.controls)
+  }
+  const customizeScenario = (next: ScenarioControls) => {
+    setPresetId(matchingPresetId(next))
+    setControls(next)
   }
 
   const copyWarnings = async () => {
@@ -637,6 +663,7 @@ function App() {
                 <button
                   type="button"
                   key={preset.id}
+                  aria-pressed={presetId === preset.id}
                   className={presetId === preset.id ? 'preset-button active' : 'preset-button'}
                   onClick={() => applyPreset(preset.id)}
                   title={preset.summary}
@@ -645,9 +672,15 @@ function App() {
                 </button>
               ))}
             </div>
+            <ScenarioProvenance presetId={presetId} />
             <div className="essential-controls">
               {essentialControls.map((meta) => (
-                <ScenarioSlider key={meta.key} meta={meta} controls={controls} setControls={setControls} />
+                <ScenarioSlider
+                  key={meta.key}
+                  meta={meta}
+                  controls={controls}
+                  setControls={customizeScenario}
+                />
               ))}
             </div>
           </section>
@@ -748,6 +781,7 @@ function App() {
               <button
                 type="button"
                 key={preset.id}
+                aria-pressed={presetId === preset.id}
                 className={presetId === preset.id ? 'preset-button active' : 'preset-button'}
                 onClick={() => applyPreset(preset.id)}
                 title={preset.summary}
@@ -756,9 +790,15 @@ function App() {
               </button>
             ))}
           </div>
+          <ScenarioProvenance presetId={presetId} />
           <div className="control-stack">
             {controlMeta.map((meta) => (
-              <ScenarioSlider key={meta.key} meta={meta} controls={controls} setControls={setControls} />
+              <ScenarioSlider
+                key={meta.key}
+                meta={meta}
+                controls={controls}
+                setControls={customizeScenario}
+              />
             ))}
           </div>
         </aside>
