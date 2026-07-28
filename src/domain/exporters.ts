@@ -2,7 +2,9 @@ import type { AllocationRecommendation, BriefingPacket, DistrictAssessment } fro
 
 const csvEscape = (value: string | number) => {
   const text = String(value)
-  return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
+  const safeText =
+    typeof value === 'string' && /^[=+\-@\t\r\n]/.test(text) ? `'${text}` : text
+  return /[",\n\r]/.test(safeText) ? `"${safeText.replace(/"/g, '""')}"` : safeText
 }
 
 export const districtsToCsv = (districts: DistrictAssessment[]) => {
