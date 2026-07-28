@@ -10,6 +10,8 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: /Humanitarian Risk Command Center/i })).toBeInTheDocument()
     expect(screen.getByText(/City risk/i)).toBeInTheDocument()
     expect(screen.getByText(/Priority Brief/i)).toBeInTheDocument()
+    expect(screen.getByRole('navigation', { name: /Workspace quick navigation/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Priority/i })).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: /Heat Health/i }))
 
@@ -27,6 +29,7 @@ describe('App', () => {
     fireEvent.click(screen.getByRole('button', { name: /Expert/i }))
 
     expect(screen.getByRole('button', { name: /Download district CSV/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Lifelines/i })).toBeInTheDocument()
   })
 
   it('has no obvious accessibility violations in the loaded dashboard', async () => {

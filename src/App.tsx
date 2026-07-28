@@ -525,6 +525,24 @@ function App() {
   const primaryMove = recommendations[0]
   const primaryWarning = priorityWarnings[0]
   const essentialControls = controlMeta.filter((meta) => essentialControlKeys.has(meta.key))
+  const sectionLinks =
+    mode === 'simple'
+      ? [
+          ['situation', 'Situation'],
+          ['priority', 'Priority'],
+          ['map', 'Map'],
+          ['actions', 'Actions'],
+        ]
+      : [
+          ['scenario', 'Scenario'],
+          ['map', 'Map'],
+          ['lifelines', 'Lifelines'],
+          ['forecast', 'Forecast'],
+          ['allocations', 'Allocations'],
+          ['warnings', 'Warnings'],
+          ['incidents', 'Incidents'],
+          ['evidence', 'Evidence'],
+        ]
   const applyPreset = (id: string) => {
     const preset = scenarioPresets.find((item) => item.id === id) ?? defaultScenario
     setPresetId(preset.id)
@@ -575,6 +593,21 @@ function App() {
         </div>
       </header>
 
+      <nav className="operations-jumpbar" aria-label="Workspace quick navigation">
+        <span>Jump to</span>
+        <div>
+          {sectionLinks.map(([id, label]) => (
+            <button
+              type="button"
+              key={id}
+              onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </nav>
+
       <section className="command-strip" aria-label="Current response context">
         <article>
           <span>Top district</span>
@@ -624,7 +657,7 @@ function App() {
 
       {mode === 'simple' ? (
         <section className="simple-experience">
-          <section className="panel simple-controls-panel">
+          <section className="panel simple-controls-panel" id="situation">
             <div className="panel-heading">
               <div>
                 <p>Scenario</p>
@@ -653,7 +686,7 @@ function App() {
           </section>
 
           <section className="simple-grid">
-            <section className="panel priority-panel">
+            <section className="panel priority-panel" id="priority">
               <div className="panel-heading">
                 <div>
                   <p>Priority Brief</p>
@@ -691,7 +724,7 @@ function App() {
               </div>
             </section>
 
-            <section className="panel map-panel simple-map-panel">
+            <section className="panel map-panel simple-map-panel" id="map">
               <div className="panel-heading">
                 <div>
                   <p>Map</p>
@@ -716,7 +749,7 @@ function App() {
               </div>
             </section>
 
-            <section className="panel next-panel">
+            <section className="panel next-panel" id="actions">
               <div className="panel-heading">
                 <div>
                   <p>Next Moves</p>
@@ -735,7 +768,7 @@ function App() {
         </section>
       ) : (
         <section className="workspace-grid">
-        <aside className="panel scenario-panel">
+        <aside className="panel scenario-panel" id="scenario">
           <div className="panel-heading">
             <div>
               <p>Scenario Lab</p>
@@ -763,7 +796,7 @@ function App() {
           </div>
         </aside>
 
-        <section className="panel map-panel">
+        <section className="panel map-panel" id="map">
           <div className="panel-heading">
             <div>
               <p>Operational Map</p>
@@ -792,7 +825,7 @@ function App() {
           </div>
         </section>
 
-        <section className="panel lifeline-panel">
+        <section className="panel lifeline-panel" id="lifelines">
           <div className="panel-heading">
             <div>
               <p>FEMA Lifelines</p>
@@ -808,7 +841,7 @@ function App() {
           </div>
         </section>
 
-        <section className="panel forecast-panel">
+        <section className="panel forecast-panel" id="forecast">
           <div className="panel-heading">
             <div>
               <p>Forecast</p>
@@ -819,7 +852,7 @@ function App() {
           <ForecastChart forecast={forecast} />
         </section>
 
-        <section className="panel allocation-panel">
+        <section className="panel allocation-panel" id="allocations">
           <div className="panel-heading">
             <div>
               <p>Optimization</p>
@@ -840,7 +873,7 @@ function App() {
           <AllocationTable recommendations={recommendations} />
         </section>
 
-        <section className="panel warnings-panel">
+        <section className="panel warnings-panel" id="warnings">
           <div className="panel-heading">
             <div>
               <p>Public Warning</p>
@@ -851,7 +884,7 @@ function App() {
           <WarningPanel messages={warningMessages} onCopy={copyWarnings} copied={copied} />
         </section>
 
-        <section className="panel incident-panel">
+        <section className="panel incident-panel" id="incidents">
           <div className="panel-heading">
             <div>
               <p>Signals</p>
@@ -862,7 +895,7 @@ function App() {
           <IncidentStream />
         </section>
 
-        <section className="panel evidence-panel">
+        <section className="panel evidence-panel" id="evidence">
           <div className="panel-heading">
             <div>
               <p>Explainability</p>
