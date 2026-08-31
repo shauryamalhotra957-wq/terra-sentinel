@@ -500,11 +500,14 @@ export const generateWarnings = (
     },
   ]
 
-  return messages.map((message) => ({
-    ...message,
-    body: stripControlCharacters(message.body),
-    checksum: checksum(message.body),
-  }))
+  return messages.map((message) => {
+    const body = stripControlCharacters(message.body)
+    return {
+      ...message,
+      body,
+      checksum: checksum(body),
+    }
+  })
 }
 
 export const createBriefingPacket = (
