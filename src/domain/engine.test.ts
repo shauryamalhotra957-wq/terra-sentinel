@@ -89,6 +89,24 @@ describe('risk engine', () => {
     expect(forecast.every((point) => point.averageRisk >= 0 && point.averageRisk <= 100)).toBe(true)
   })
 
+  it('computes checksums from the sanitized warning body', () => {
+    const city = assessCity(defaultScenario.controls)
+    const source = city.districts[0]
+    const selected = {
+      ...source,
+      district: { ...source.district, name: 'Ward <1>' },
+    }
+    const warning = generateWarnings(selected, defaultScenario.controls)[0]
+    let hash = 0
+    for (const character of warning.body) {
+      hash = (hash * 31 + character.charCodeAt(0)) % 999_983
+    }
+    const expected = hash.toString(16).padStart(5, '0').slice(0, 5).toUpperCase()
+
+    expect(warning.body).not.toContain('<')
+    expect(warning.checksum).toBe(expected)
+  })
+
   it('sanitizes warning copy and stamps checksums', () => {
     const city = assessCity(defaultScenario.controls)
     const warnings = generateWarnings(city.districts[0], defaultScenario.controls)
