@@ -66,5 +66,7 @@ export const downloadText = (filename: string, contents: string, mimeType: strin
   document.body.append(anchor)
   anchor.click()
   anchor.remove()
-  URL.revokeObjectURL(url)
+
+  // Give the browser a chance to start the download before releasing the object URL.
+  window.setTimeout(() => URL.revokeObjectURL(url), 0)
 }
