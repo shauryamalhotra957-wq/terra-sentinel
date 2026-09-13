@@ -1,5 +1,8 @@
 # Terra Sentinel
 
+[![CI](https://github.com/shauryamalhotra957-wq/terra-sentinel/actions/workflows/ci.yml/badge.svg)](https://github.com/shauryamalhotra957-wq/terra-sentinel/actions) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
 Humanitarian Risk Command Center for disaster lifelines, resource allocation, and trusted public warnings.
 
 Terra Sentinel is a polished, offline-capable TypeScript app that turns a city-level disaster scenario into:
