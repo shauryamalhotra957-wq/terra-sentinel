@@ -13,7 +13,7 @@
     "test:coverage": "vitest run --coverage",
     "qa:visual": "node scripts/visual-qa.mjs",
     "preview:pages": "node scripts/pages-preview.mjs",
-    "security:audit": "npm audit --audit-level=moderate",
+    "security:audit": "npm audit --omit=dev --audit-level=high",
     "check": "npm run lint && npm run test && npm run build && npm run security:audit",
     "preview": "vite preview --host 127.0.0.1"
   },
